@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+      <h1>RegisterRoom</h1>
+      <form>
+          <label for="username">Username:</label>
+          <input type="text" name="username" value="">
+
+          <label for="password">Password:</label>
+          <input type="password" name="password" value="">
+
+          <input type="submit" name="" value="submit">
+      </form>
+
+    <script type="text/javascript">
+      var xhttp = new XMLHttpRequest();
+      var inputs = document.getElementsByTagName("Input");
+      var form = document.getElementsByTagName("form")[0];
+      form.addEventListener("submit" , function(x){// submit button
+          x.preventDefault();
+          var username = inputs[0].value;
+          var password = inputs[1].value;
+          if (username.length <=5 ){
+              alert(" username must be more than 5");
+          }
+          else if(password.length <=6){
+              alert("password must be at least 7 characters")
+          }
+          else{
+                xhttp.open("POST", "http://localhost:3000/register", true);
+
+                xhttp.onreadystatechange = function() {
+
+                    if (this.readyState == 4 && this.status == 200) {
+                          if (this.response == "login"){
+                              window.location.href = "http://localhost:3000/chat";
+                          }
+                          else{
+                            location.reload();
+                          }
+
+                   }
+                }
+
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send('username=' + encodeURIComponent(username)+"&password="+encodeURIComponent(password));
+          }
+
+
+      })
+    </script>
+
+  </body>
+
+
+</html>

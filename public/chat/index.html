@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+  </head>
+
+  <style media="screen">
+
+    html, body{
+      height: 100%;
+      margin: 0;
+
+    }
+
+      /*#loginContainer{
+
+      }*/
+
+      #main{
+        /*width: 100%;*/
+        height: 100%;
+      }
+
+      #searchAndChatContainer{
+
+        display:none;
+        height: 100%;
+        width: 100%;
+        flex-direction: column;
+      }
+      /*searchAreaFolder*/
+      #searchContainer{
+        /*width: 100%;*/
+        flex: 1;
+        padding: 10px;
+        display: flex;
+        background-color: #5F5F5F;
+        z-index: 20;
+      }
+      #searchContainerLeft , #searchContainerRight{
+          position: relative;
+          flex:1;
+
+      }
+
+      #searchForm , #searchNav {
+          position: absolute;
+          display: flex;
+          left: 50%;
+          top: 50%;
+          width: 80%;
+          height: 100%;
+          transform: translate(-50% , -50%);
+
+      }
+
+      #searchForm :nth-child(1) {
+          flex:5;
+      }
+      #searchForm :nth-child(2){
+        flex:1;
+      }
+
+      #searchNav > div{
+          border: none;
+          flex: 1;
+          max-width: 30px;
+          position: relative;
+          display: inline-block;
+      }
+
+      .notificationButtonTrue{
+        background-color: #ff2b2b;
+      }
+
+      .notificationButtonFalse{
+        background-color: #afdbbd;
+      }
+      .notificationButtonTrue:hover{
+        background-color: #ED2939;
+      }
+      .notificationButtonFalse:hover{
+          background-color: #def7e6;
+      }
+
+      #notificationButton > ul{
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          background-color: #F5F5F5;
+      }
+        #notificationButton > ul > li{
+          height: 100px;
+          width: 200px;
+          border-bottom: 2px solid black;
+          display: flex;
+          flex-direction: column;
+        }
+
+        #notificationButton > ul > li > span{
+            flex: 1;
+            text-align: center;
+        }
+
+        #notificationButton > ul > li > div{
+            flex: 3;
+            position: relative;
+        }
+
+        #notificationButton > ul > li > div > button{
+            position: absolute;
+            height: 30%;
+            width: 30%;
+            border: none;
+
+        }
+
+        .accept{
+            top: 50%;
+            left: 0;
+            transform: translate( 50%, -50% );
+            background-color: #74C365;
+        }
+        .accept:hover{
+          background-color: 	#00FF00;
+        }
+
+        .reject{
+           top: 50%;
+            right: 0;
+            transform: translate( -50%, -50% );
+            background-color: #ED2939;
+        }
+
+        .reject:hover{
+          background-color: 	#FF2400
+        }
+
+      /*chatCssFolder*/
+
+      #mainBody{
+        flex: 15;
+        display: flex;
+
+      }
+
+      #friendsList{
+          flex: 1;
+          border: 2px solid black;
+          display: flex;
+          flex-direction: column;
+      }
+      #leftBody{
+          flex: 5;
+          border: 2px solid black;
+          position: relative;
+
+      }
+
+
+      #friendsList ul{
+        list-style: none;
+        padding: 0;
+        margin:0;
+        height: 100%;
+        display:flex;
+        flex-direction: column;
+      }
+      .friendListItems{
+          display: block;
+          min-height: 40px;
+          max-height: 40px;
+          width: 100%;
+          flex: 1;
+          text-align: center;
+          position: relative;
+      }
+
+  .unseenMessagesZero{
+      display: none;
+    }
+
+	.unseenMessages{
+        display: inline;
+    	  background-color:red;
+        color:white;
+        padding:0px 5px 0px 5px;
+        position: absolute;
+        top:0px;
+        left:0px;
+        z-index: -1;
+    }
+
+
+      .friendListItems:hover{
+        background-color: #98e0af;
+      }
+
+
+      #chatBoxSpawner{
+
+          position: absolute;
+          bottom:0;
+          right:0;
+          /*transform: translate(-25vh  , -40vh);*/
+
+      }
+
+
+
+      .chatContainer{
+        float: left;
+        height: 45vh;
+        width: 30vh;
+        border: 1px solid green;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+
+      }
+
+      .chatHeader{
+        flex:1;
+        border-bottom: 1px solid black;
+      }
+
+
+
+    .chatBodyContainer{
+        flex:8;
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+
+      }
+
+    .chatBody{
+           display: flex;
+           flex-direction: column-reverse;
+           width: 90%;
+           margin:0 auto;
+           min-height: 100%;
+        }
+
+      .chatFooter{
+        flex:1
+      }
+      .chatForm{
+      	height: 100%; width: 100%;
+      }
+
+      .chatBox{
+      	  height: 100%;
+          width: 100%;
+          box-sizing: border-box;
+      }
+
+      .chatBody div{
+         margin-top: 15px;
+      }
+
+      .selfDiv{
+        text-align:right;
+      }
+      .otherDiv{
+         text-align: left;
+      }
+
+      .selfSpan, .otherSpan{
+        display: inline-block;
+         max-width: 80%;
+         padding: 5px;
+         word-break: break-all;
+         border-radius: 15px;
+
+         text-align: left;
+         color: #4B4F56;
+       }
+
+      .selfSpan{
+
+        background-color: #4080ff;;
+      }
+
+      .otherSpan{
+        background-color: #F1F0F0;
+      }
+
+  </style>
+  <body>
+
+  <div id="main">
+        <div id="loginContainer">
+            <h1>Login</h1>
+            <form id="loginForm">
+                  <label for="loginUsername">Username:</label>
+                  <input type="text" id="loginUsername">
+                  <label for="loginPassword">Password:</label>
+                  <input type="password" id="loginPassword">
+                  <input type="submit" name="" value="submit" id="loginSubmit">
+            </form>
+            <div id="errMessage">
+
+            </div>
+        </div>
+
+        <div id="searchAndChatContainer">
+                <div id="searchContainer">
+                    <div id="searchContainerLeft">
+                        <form id="searchForm">
+                          <input type="text" name="" value="" id="searchArea">
+                          <input type="submit" value="Add Friend"id="searchSubmit">
+                        </form>
+                    </div>
+
+                    <div id="searchContainerRight">
+                      <nav id="searchNav">
+                        <div id="notificationButton" class = "notificationButtonTrue notificationButtonFalse ">
+                              <ul id = "notificationUl">
+
+                               </ul>
+                            </div>
+                      </nav>
+                    </div>
+                </div>
+
+                <div id="mainBody">
+                    <div id="leftBody">
+                            <h1 id="usernameGoesHere"></h1>
+                            <div id="chatBoxSpawner">
+
+
+                            </div>
+
+                    </div>
+                    <div id ="friendsList">
+                        <ul>
+                            <!--list of friends goes here -->
+                        </ul>
+                    </div>
+                </div>
+        </div>
+
+
+  </div>
+
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js">
+     </script>
+      <script type="text/javascript" src="loginScript.js">
+      </script>
+      <script type="text/javascript" src="chatScript.js">
+      </script>
+      <script type="text/javascript" src="addAcceptQuery.js">
+
+      </script>
+
+
+  </body>
+</html>
+
+
+<!--
+<div class="chatContainer">
+
+    <div class="chatHeader">
+    </div>
+
+    <div class="chatBodyContainer">
+          <div class="chatBody">
+          </div>
+    </div>
+
+    <div class="chatFooter">
+        <form class="chatForm">
+          <input type="text" class="chatBox">
+        </form>
+    </div>
+
+</div> -->
