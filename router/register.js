@@ -4,34 +4,37 @@ var path = require('path');
 var User = require('../mongoose/models').User;
 var Chat = require('../mongoose/models').Chat;
 
+// msg -- 77 -- username or password not enoug length
+// msg -- 88 -- username already exists
 
 router.use(express.static(path.join(__dirname , '..' , 'public','register')))//make sure the name of the file is index.html otherwise it wont serve
 
 router.post('/' , function(req , res){
-  if (req.body.username.length <= 5 || req.body.username.length >= 15){
-        res.send("invalid username");
-        return;
-  }
+    var username = req.body.username.trim();
+    if (username <= 5 || req.body.username.length >= 15){
+          res.send( {err: 77 , msg: "invalid username"});
+          return;
+    }
 
-  else if (req.body.password.length <=6){
-        res.send("invalid password");
-        return;
-  }
+    else if (req.body.password.length <=6){
+          res.send( { err: 77 , msg: "invalid password"});
+          return;
+    }
 
-  if(req.body.username === null || req.body.password === null){
-      res.redirect('/register')
-  }
-        var user = new User({ username: req.body.username, password: req.body.password , friends:[]} )
-        user.save( (err , user)=>{
-            if(err){
-              console.log(err)
-              res.send("duplicate");
-            }
-            else{
-              res.send("login");
-            }
-        })
+    if(username === null || req.body.password === null){
+        res.send( { err: 77 , msg: "invalid username or password"})
+    }
+          var user = new User({ username: username, password: req.body.password , friends:[]} )
+          user.save( (err , user)=>{
+              if(err){
+                res.send({ err: 88 , msg:"username already exists"});
+              }
+              else{
+                res.json(200);
+              }
+          })
 })
+
 
 router.get('/drop' , function(req , res, next){
 
