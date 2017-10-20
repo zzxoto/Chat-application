@@ -7,17 +7,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [
-    "socket"
-  ],
-  "author": "abhaya",
-  "license": "ISC",
+
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.4",
-    "http": "0.0.0",
+    "express": "^4.16.2",
     "mongoose": "^4.11.8",
     "path": "^0.12.7",
     "socket.io": "^2.0.3"
-  }
+  },
+"repository": {
+  "type": "git",
+  "url": "https://git.heroku.com/abhaya-chat-as-you-like.git"
+},
+  "author": "Abhaya Uprety",
+  "license": "ISC",
 }
