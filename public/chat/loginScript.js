@@ -39,7 +39,7 @@ var  recursiveQuery = function(){//error checked
 
       var routineQuery = function(){//error checked
 
-
+        console.log('routine')
           socket.emit('routine' , (response)=>{//error checked
               if (response.err){
                   errorHandler(response.err , 'routine');
@@ -165,11 +165,12 @@ function unseenMessagesNotifier(friend_friendList , numberContainer){
 
       if (from){
             if (from == "login"){
+                var loginErr = document.getElementById("loginErr");
                 if (err == 200){
-                    console.log('Password dont match');
+                    loginErr.innerHTML = ('Password dont match');
                 }
                 if(err == 100){
-                    console.log('User dont exist');
+                    loginErr.innerHTML = ('User dont exist');
                 }
             }
 

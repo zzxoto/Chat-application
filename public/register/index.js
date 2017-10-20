@@ -15,7 +15,7 @@ form.addEventListener("submit" , function(x){// submit button
         alert("password must be at least 7 characters")
     }
     else{
-          xhttp.open("POST", "http://localhost:3000/register", true);
+          xhttp.open("POST", "https://abhaya-chat-as-you-like.herokuapp.com/register", true);
 
           xhttp.onreadystatechange = register_response;
 
@@ -47,7 +47,7 @@ function register_response(){
             errDisplay.style.display = "block";
       }
       else{
-        window.location.href = "http://localhost:3000/chat";
+        window.location.href = "https://abhaya-chat-as-you-like.herokuapp.com/chat";
       }
 
   }

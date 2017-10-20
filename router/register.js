@@ -28,6 +28,7 @@ router.post('/' , function(req , res){
           user.save( (err , user)=>{
               if(err){
                 res.send({ err: 88});
+                console.log(err);
               }
               else{
                 res.json(200);

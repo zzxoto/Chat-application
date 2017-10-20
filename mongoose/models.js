@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-
-var friendSchema = mongoose.Schema({
+var friendSchema = new Schema({
   friend:{
     type:String
   },
@@ -13,7 +13,7 @@ var friendSchema = mongoose.Schema({
 
 
 
-var userSchema = mongoose.Schema({
+var userSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -38,7 +38,7 @@ var userSchema = mongoose.Schema({
 })
 
 
-var textSchema = mongoose.Schema({
+var textSchema = new Schema({
     name:{
       type: String
     },
@@ -48,7 +48,7 @@ var textSchema = mongoose.Schema({
 
 })
 
-var chatSchema = mongoose.Schema({
+var chatSchema = new Schema({
     partyName:{
       type: String
     },

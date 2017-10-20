@@ -1,7 +1,6 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     mongoose = require('mongoose'),
     User = require('./mongoose/models').User,
@@ -11,14 +10,14 @@ var express = require('express'),
     registerRouter = require('./router/register'),
     practiseRouter = require('./router/practise');
 
-server.listen(3000)
+app.listen(process.env.PORT || 8080);
 
-mongoose.connect('mongodb://localhost:27017/chat' , (err)=>{
+mongoose.connect('mongodb://jasmine:jasmine@ds227565.mlab.com:27565/abhaya_first_chatapp' , (err)=>{
       if(err){
         console.log(err);
       }
       else{
-        console.log('coonected to the mongodb database');
+        console.log('conected to the mongodb database');
       }
 });
 
