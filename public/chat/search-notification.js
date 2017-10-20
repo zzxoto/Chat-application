@@ -62,9 +62,6 @@ var acceptOrRejectFriend = function(friendName , bool){
           friendListAppender (friends.splice(friends.length -1 , 1));//only sending the latest friend to append
 
           dynamicNotification(response.pendingRequests , false);//false means dont make notification change color
-
-
-
       })
   }
 

@@ -1,6 +1,6 @@
 
 var query = require('../databaseQuery');
-var serverRestartErr = {err: "Server restarted"}
+var serverRestartErr = {err: 441};
 
 let ioEventHandling =  (io)=>{
 
@@ -8,12 +8,10 @@ let ioEventHandling =  (io)=>{
 
         socket.on('verify' , (user, callback)=>{    //checks if user exists
           query.verify( user , (x)=>{
-                if(x.err === 100){
-                  callback({err: 'user doesnot exist'})
-                }
-                else if(x.err === 200){
-                    callback({err: 'password didnot match' })
-                }
+            if (x.err){     //if err == 100-> user dont exist .. if err -- 200-> password doesnot match
+              callback({err: x.err})
+            }
+
                 else{
                    socket._id = x._id
                    socket.name = x.username
@@ -40,20 +38,21 @@ let ioEventHandling =  (io)=>{
                       break;
                   }
               }
-              query.fetchChatHistory(partyName , socket.name, socket._id , friendName , (history , party , bool)=>{
+              query.fetchChatHistory(partyName , socket.name, socket._id , friendName , (history , party , bool , err)=>{
+                  if (err){ callback(null , err); return; }
 
                   socket.join(party)
                   if(bool){
                     socket.parties.push( {[friendName] : party}) //bool is the signal to save the partyName for future use
                   }
-                    callback(history) //array of strings or empty array
+                    callback(history , null) //array of strings or empty array
 
               })
 
         })
 ///////////////////////////////////////////////////////////////////////////////////
 
-        socket.on('message' , (friendName , message)=>{
+        socket.on('message' , (friendName , message , callback)=>{
              if (!socket.name){ callback(serverRestartErr); return;}
 
               var partyName = '';
@@ -66,15 +65,15 @@ let ioEventHandling =  (io)=>{
               }
 
               if (!partyName){
-                  console.log('something wrong message socket')
+                  callback({err: 100});//cant find other party
                   return
               }
 
-              var msg = {name: socket.name , text: message}
+              var msg = {name: socket.name , text: message};
 
               query.saveMessage(partyName , msg , (x)=>{
                   if(x.err){
-                    console.log(x.err)
+                    callback({ err: x.err});
                   }
                   else{
 

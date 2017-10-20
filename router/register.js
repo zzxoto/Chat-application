@@ -12,22 +12,22 @@ router.use(express.static(path.join(__dirname , '..' , 'public','register')))//m
 router.post('/' , function(req , res){
     var username = req.body.username.trim();
     if (username <= 5 || req.body.username.length >= 15){
-          res.send( {err: 77 , msg: "invalid username"});
+          res.send( {err: 77});
           return;
     }
 
     else if (req.body.password.length <=6){
-          res.send( { err: 77 , msg: "invalid password"});
+          res.send( { err: 77 });
           return;
     }
 
     if(username === null || req.body.password === null){
-        res.send( { err: 77 , msg: "invalid username or password"})
+        res.send( { err: 77 })
     }
           var user = new User({ username: username, password: req.body.password , friends:[]} )
           user.save( (err , user)=>{
               if(err){
-                res.send({ err: 88 , msg:"username already exists"});
+                res.send({ err: 88});
               }
               else{
                 res.json(200);

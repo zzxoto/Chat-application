@@ -32,8 +32,18 @@ function register_response(){
     if (this.readyState == 4 && this.status == 200) {
 
       var response = JSON.parse(this.response);
-      if (response.err){
-            errDisplay.innerHTML = response.msg;
+      var err = response.err;
+      if (err){
+            var errMessage = "";
+
+            if (err == 77){
+                errMessage = "Username or password doesnot fulfill the requirement";
+            }
+            if (err == 88){
+              errMessage = "Username already exists";
+            }
+
+            errDisplay.innerHTML = errMessage;
             errDisplay.style.display = "block";
       }
       else{

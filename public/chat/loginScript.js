@@ -11,10 +11,9 @@ var searchAndChatContainer = document.getElementById('searchAndChatContainer');
 var  friendUlTag   = document.getElementById("friendsList").childNodes[1];
 var friendUlTagArray ;
 
-loginForm.addEventListener('submit' , (x)=>{
+loginForm.addEventListener('submit' , (x)=>{ //err Checked
 
     x.preventDefault();
-    console.log('try to submit')
     let userObject = {
       username: loginUsername.value,
       password: loginPassword.value
@@ -22,7 +21,7 @@ loginForm.addEventListener('submit' , (x)=>{
 
     socket.emit('verify' , userObject , function(response){
         if (response.err){
-            errorHandler(response.err);
+            errorHandler(response.err , 'login');
             return;
         }
 
@@ -36,14 +35,14 @@ loginForm.addEventListener('submit' , (x)=>{
 
 })
 
-var  recursiveQuery = function(){
+var  recursiveQuery = function(){//error checked
 
-      var routineQuery = function(){
+      var routineQuery = function(){//error checked
 
 
-          socket.emit('routine' , (response)=>{
+          socket.emit('routine' , (response)=>{//error checked
               if (response.err){
-                  errorHandler(response.err);
+                  errorHandler(response.err , 'routine');
               }
               else{
                   for(var each of response){//response is array of objects
@@ -153,10 +152,44 @@ function unseenMessagesNotifier(friend_friendList , numberContainer){
     }
 
 
-    function errorHandler(err){
-      if(err == "Server restarted"){
-        alert("reloading the page");
-        location.reload();
+    function errorHandler(err , from){
+      if (err isinstanceof(Object){
+        err = err.err;
+      })
+      if(err == 441){
+          alert("Not sync with server .. Reloading page");
+          location.reload();)
+      }
+
+      if (from){
+            if (from == "login"){
+                if (err == 200){
+                    console.log('Password dont match');
+                }
+                if(err == 100){
+                    console.log('User dont exist');
+                }
+            }
+
+            if (from == "message"){
+                if (err == 100){
+                    console.log("trouble finding other party");
+                }
+                if(err == 200){
+                    console.log("couldnot send message");
+                }
+            }
+
+            if (from == "chatHistory"){
+                if (err == 100){
+                      //couldnt locate that friend try again
+                }
+                if (err == 200){
+                  //user dont exist on database
+                }
+            }
+
+
       }
 
     }

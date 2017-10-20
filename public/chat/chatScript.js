@@ -4,7 +4,7 @@
 var chatBoxSpawner = document.getElementById('chatBoxSpawner');
 
 
-chatBoxSpawner.addEventListener('submit' , (x)=>{
+chatBoxSpawner.addEventListener('submit' , (x)=>{//err checked
 
     x.preventDefault();
     var form_id =  x.target.getAttribute('id');//have stored the username (i.e. unique) as id of the chat form as chatBoxID
@@ -13,10 +13,13 @@ chatBoxSpawner.addEventListener('submit' , (x)=>{
     var message = x.target.firstChild.value;//input box
 
     if (message){   //cant send ''
-      socket.emit('message' , friendName , message );
+      socket.emit('message' , friendName , message , (x)=>{
+        if (x.err){
+            errorHandler(x.err , "message")
+        }
+      });
       x.target.firstChild.value = "";
     }
-
 })
 
 chatBoxSpawner.addEventListener('click' , (x)=> {       //removing chatBox on clicking its header
@@ -28,9 +31,8 @@ chatBoxSpawner.addEventListener('click' , (x)=> {       //removing chatBox on cl
       chatContainer.parentNode.removeChild(chatContainer);
 
       socket.emit('leaveParty' , friendName , callback(err)={
-        if(err){ errorHandler(err)}
+        if(err){ errorHandler(err) }
       })
-      //TODO  emit socket.leaveparty
 
     }
 
@@ -116,32 +118,20 @@ function chatBoxFactory(friendName){
 function fetchChatHistory(friendName){
 
 
-  socket.emit('requestChatHistory' , friendName , function(response){
+  socket.emit('requestChatHistory' , friendName , function(response , err){
 
-    if (response.err){
-      errorHandler(response.err);
+    if (err){
+      errorHandler(err , "chatHistory");
       return;
     }
       var chatBodyContainer = document.getElementById('chatBodyContainer' + friendName);
-        if(response.err){
-            console.log(response.err)
-        }
 
-        else{
+        for(var each of response){
+            appendChatToView(each , friendName)
+      }
+      chatBodyContainer.scrollTop = chatBodyContainer.scrollHeight - chatBodyContainer.clientHeight;//scrolling all the way down at start
 
-              if (response.length == 0){
-                    console.log('first time')
-              }
-              else{
-                      for(var each of response){
-                          appendChatToView(each , friendName)
-                    }
-                        chatBodyContainer.scrollTop = chatBodyContainer.scrollHeight - chatBodyContainer.clientHeight;//scrolling all the way down at start
-              }
-
-        }
   })
-
 
 }
 
@@ -150,7 +140,6 @@ function fetchChatHistory(friendName){
 function appendChatToView(msg , friendName ){//callback is optional
 
     var chatBody = document.getElementById('chatBody' + friendName)
-
 
     if(chatBody){
 

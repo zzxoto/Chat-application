@@ -30,12 +30,12 @@ var messageFunction = function(partyName , msg , callback){   //TODO
 
       Chat.findOne({partyName: partyName} , function(err , party){
           if(err){
-            callback({err: err})
+            callback({err: 100})//trouble finding other party
           }
           else{
                 party.chatHistory.push(msg)//push msg object into chathistory array
                 party.save((err)=>{
-                  if(err){    callback({err:err}) }
+                  if(err){    callback({err: 200}) }//couldnot send message
                   else{
                     callback(msg)
                   }
@@ -213,13 +213,13 @@ var fetchChatHistoryFunction = function(partyName , user_name , user_id , friend
             Chat.findOne({partyName: partyName} , function(err , party){
 
                       if(err){
-                        console.log(err)
+                        callback(null , {err:100});//couldnt get other party
                       }
                       else{
                                 User.findOne({username: user_name}, function(err , user){
 
                                         if(err){
-                                            console.log(err)
+                                            callback(null , {err:200})//username dont exist
                                         }
                                         else{
 
@@ -230,7 +230,7 @@ var fetchChatHistoryFunction = function(partyName , user_name , user_id , friend
                                                 }
                                             }
                                             user.save();
-                                            callback(party.chatHistory);
+                                            callback(party.chatHistory , null);
                                         }
 
                                 } )
@@ -242,8 +242,9 @@ var fetchChatHistoryFunction = function(partyName , user_name , user_id , friend
 
       if(partyName){
 
-          var history  = __historyFetch(partyName , (response)=>{
-                callback(response , partyName , false);//signal to not save the partyName
+          var history  = __historyFetch(partyName , (response , err)=>{
+                if (err){ callback(null , null ,null, err);}
+                else{ callback(response , partyName , false , null); }//signal to not save the partyName
 
           });
 
@@ -251,10 +252,15 @@ var fetchChatHistoryFunction = function(partyName , user_name , user_id , friend
 
     else{
           __uniqueIdFinderFunction(user_name , user_id , friendName,
-            (uniqueId)=>{ __historyFetch(uniqueId , (history)=>{
-                                                  //signal to save the partyName
-                callback(history, uniqueId , true) //callback Hell!!
+            (uniqueId , err)=>{
+              if(err){ callback(null , null , null , err)};
+
+              __historyFetch(uniqueId , (history , err)=>{
+
+                  if (err){ callback(null , null ,null, err);}
+                  else{ callback(history, uniqueId , true , null) } //callback Hell!! .. signal to save the partyName
             })
+
           });
 
     }
@@ -293,7 +299,7 @@ var unseenMessagesCounterFunction = function(self , friendName){
 //private function only to be used as a helper function for above database queries
 var __chatPartyCreateFunction = function(friend, user_id , user_name){  //create party helper //TODO
 
-    __uniqueIdFinderFunction( user_name , user_id , friend , function(uniqueId){
+    __uniqueIdFinderFunction( user_name , user_id , friend , function(uniqueId , err){
 
             Chat.create({
                   partyName: uniqueId,
@@ -310,12 +316,12 @@ var __chatPartyCreateFunction = function(friend, user_id , user_name){  //create
 
 var __uniqueIdFinderFunction =  function(user_name , user_id , friendName, callback ){//TODO
 
+//100 -> cant find that friend
 
   User.findOne({username: friendName}, (err, friendAccount)=>{
       if(!friendAccount){
-          console.log( 'invalid friend Name')
+          callback(null , {err:100})
       }
-
       else{
 
              var greaterName;
@@ -330,7 +336,7 @@ var __uniqueIdFinderFunction =  function(user_name , user_id , friendName, callb
                   other_id = friendAccount._id;
              }
              var uniqueId = greaterName + other_id;    //very unique party
-             callback(uniqueId)
+             callback(uniqueId , null)
 
       }
 
