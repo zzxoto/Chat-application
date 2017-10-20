@@ -153,9 +153,11 @@ function unseenMessagesNotifier(friend_friendList , numberContainer){
 
 
     function errorHandler(err , from){
-      if (err isinstanceof(Object){
+
+      if (err instanceof(Object) ){
         err = err.err;
-      })
+      }
+
       if(err == 441){
           alert("Not sync with server .. Reloading page");
           location.reload();)
