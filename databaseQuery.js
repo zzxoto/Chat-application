@@ -1,8 +1,9 @@
 
 var User = require('./mongoose/models').User;
 var Chat = require('./mongoose/models').Chat;
+const author = "Abhaya";
 
-var verifyFunction = function(client , callback){//TODO
+var verifyFunction = function(client , callback){
 
 
   User.findOne({username: client.username}, function(err, user){
@@ -11,20 +12,20 @@ var verifyFunction = function(client , callback){//TODO
         }
         else{
               if (user.password === client.password){
-                 user.changed = []; //we are sending everything at start so no need to trigger unnecessary future change
-                 user.save();
-                  callback(user);
 
-                }
-              else{
-                  callback({err: 200})
-                }
+                    if (user.firstTime == 1){ user.firstTime =2 }
+
+                    if (user.firstTime == 2){ user.firstTime = 3}
+                        user.changed = []; //we are sending everything at start so no need to trigger unnecessary future change
+                        user.save( (err)=> { callback(user); });
+                    }
+                  else{
+                      callback({err: 200})
+                    }
             }
         })
 
 }
-
-
 
 var messageFunction = function(partyName , msg , callback){   //TODO
 
@@ -46,6 +47,54 @@ var messageFunction = function(partyName , msg , callback){   //TODO
 
 
 }
+
+var firstTimeUserFunction = function(user , callback){
+    if (user.username == author){
+          callback();
+          return;
+    }
+    user.friends.push({ friend: author});
+    User.findOne({ username: author} , (err , admin)=> {
+
+            if (err){
+                callback({err: 441}); //server restarted
+                return;
+            }
+            admin.friends.push({friend: user.username});
+
+            __chatPartyCreateFunction( author , user._id , user.username   , ()=>{
+                    if(admin.changed.indexOf(2) == -1){
+                      admin.changed.push(2);
+                    }
+                    admin.save( (err)=> {
+                      if(!err){
+                              user.save( (err)=>{
+                                 if(!err){
+                                   callback();
+                                 }
+                                else{
+                                  callback({err: 441});
+                                }
+                              })
+                      }
+                      else{
+                          callback({err: 441});
+                      }
+
+                    });
+            })
+
+    })
+//var __chatPartyCreateFunction = function(friend, user_id , user_name, cb){  //create party helper
+
+
+}
+
+
+
+
+
+
 
 
 var addFriendFunction = function(requester , friendName , callback){//TODO
@@ -103,7 +152,6 @@ var addFriendFunction = function(requester , friendName , callback){//TODO
 
 var routineQueryFunction = function(requester , callback){//returns pendingRequests if any
 
-    console.log(requester)
     var toReturn = []
     User.findOne({username:requester} , function(err , user){
 
@@ -146,7 +194,6 @@ var routineQueryFunction = function(requester , callback){//returns pendingReque
 var acceptRejectFunction = function(acceptor , friendName , acceptor_id , bool , callback){ //TODO
   User.findOne({username: acceptor} , function(err , user){
        if(err){
-          console.log(err)
           return;
        }
        else{
@@ -174,7 +221,7 @@ var acceptRejectFunction = function(acceptor , friendName , acceptor_id , bool ,
                       User.findOne({username: friendName} , function(err, user){
 
                               if(err){
-                                console.log(err);
+                                  return;
                               }
                               else{
                                 user.friends.push({friend: acceptor});// adding the acceptor to my Friend's list
@@ -186,8 +233,8 @@ var acceptRejectFunction = function(acceptor , friendName , acceptor_id , bool ,
 
                               }
 
+                              setTimeout( ()=> __chatPartyCreateFunction( friendName , acceptor_id , acceptor, ()=>{}  ) , 0) //setTimeout to reduce the load in just one request
                       })
-                      setTimeout( ()=> __chatPartyCreateFunction( friendName , acceptor_id , acceptor  ) , 0) //setTimeout to reduce the load in just one request
 
                 }
                 else{//this is rejectFriend Situation
@@ -206,15 +253,17 @@ var acceptRejectFunction = function(acceptor , friendName , acceptor_id , bool ,
 
 
 
-var fetchChatHistoryFunction = function(partyName , user_name , user_id , friendName , callback){//TODO
+var fetchChatHistoryFunction = function(partyName , user_name , user_id , friendName , callback){//TODO ChatParty Create !!!!
 
       var __historyFetch = function(partyName , callback){
+          console.log(partyName)
 
             Chat.findOne({partyName: partyName} , function(err , party){
 
                       if(err){
                         callback(null , {err:100});//couldnt get other party
                       }
+
                       else{
                                 User.findOne({username: user_name}, function(err , user){
 
@@ -243,6 +292,7 @@ var fetchChatHistoryFunction = function(partyName , user_name , user_id , friend
       if(partyName){
 
           var history  = __historyFetch(partyName , (response , err)=>{
+
                 if (err){ callback(null , null ,null, err);}
                 else{ callback(response , partyName , false , null); }//signal to not save the partyName
 
@@ -297,7 +347,7 @@ var unseenMessagesCounterFunction = function(self , friendName){
 /////////////////////////////////////////////////////// PRIVATE functions/////////////////////////////////////
 
 //private function only to be used as a helper function for above database queries
-var __chatPartyCreateFunction = function(friend, user_id , user_name){  //create party helper //TODO
+var __chatPartyCreateFunction = function(friend, user_id , user_name, cb){  //create party helper
 
     __uniqueIdFinderFunction( user_name , user_id , friend , function(uniqueId , err){
 
@@ -306,17 +356,15 @@ var __chatPartyCreateFunction = function(friend, user_id , user_name){  //create
                   chatHistory: []
               } , function(err , party){
                           if(err){ console.log(err)}
-
+                          cb();
             })
 
     });
-
 }
-
 
 var __uniqueIdFinderFunction =  function(user_name , user_id , friendName, callback ){//TODO
 
-//100 -> cant find that friend
+//creates unique name for party based on user database Id and other user username
 
   User.findOne({username: friendName}, (err, friendAccount)=>{
       if(!friendAccount){
@@ -349,11 +397,12 @@ var __uniqueIdFinderFunction =  function(user_name , user_id , friendName, callb
 module.exports = {
   verify:verifyFunction,
   saveMessage: messageFunction,
+  firstTimeUser: firstTimeUserFunction,
 
   addFriend: addFriendFunction,
   routineQuery: routineQueryFunction,
   acceptReject: acceptRejectFunction,
 
   fetchChatHistory : fetchChatHistoryFunction,
-  unseenMessagesCounter: unseenMessagesCounterFunction
+  unseenMessagesCounter: unseenMessagesCounterFunction,
 }

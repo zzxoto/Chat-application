@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var User = require('../mongoose/models').User;
 var Chat = require('../mongoose/models').Chat;
+var firstTimeUser = require ('../databaseQuery').firstTimeUser;
 
 // msg -- 77 -- username or password not enoug length
 // msg -- 88 -- username already exists
@@ -11,29 +12,42 @@ router.use(express.static(path.join(__dirname , '..' , 'public','register')))//m
 
 router.post('/' , function(req , res){
     var username = req.body.username.trim();
+    var validEntry = true;
+
     if (username <= 5 || req.body.username.length >= 15){
-          res.send( {err: 77});
-          return;
+          validEntry = false;
     }
 
     else if (req.body.password.length <=6){
-          res.send( { err: 77 });
-          return;
+          validEntry = false;
     }
 
     if(username === null || req.body.password === null){
-        res.send( { err: 77 })
+        validEntry = false;
     }
-          var user = new User({ username: username, password: req.body.password , friends:[]} )
-          user.save( (err , user)=>{
-              if(err){
-                res.send({ err: 88});
-                console.log(err);
-              }
-              else{
-                res.json(200);
-              }
-          })
+
+          if (validEntry){
+                var user = new User({ username: username, password: req.body.password , friends:[]})
+                user.save( (err)=> {
+                  if (err){res.send(err); return;}
+
+                  firstTimeUser(user, (err)=>{
+                    if (err){
+                      res.send(err);
+                    }
+                    else{
+                      res.json(200);
+                    }
+                  })
+
+
+                })
+          }
+
+          else{
+            res.send( { err: 77 })
+          }
+
 })
 
 

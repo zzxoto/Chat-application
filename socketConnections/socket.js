@@ -13,7 +13,7 @@ let ioEventHandling =  (io)=>{
             }
 
                 else{
-                   socket._id = x._id
+                   socket._id = x._id//this is database id
                    socket.name = x.username
                    socket.parties = [];
                    callback(x)//x is object that posesses the user credentials
@@ -40,7 +40,6 @@ let ioEventHandling =  (io)=>{
               }
               query.fetchChatHistory(partyName , socket.name, socket._id , friendName , (history , party , bool , err)=>{
                   if (err){ callback(null , err); return; }
-
                   socket.join(party)
                   if(bool){
                     socket.parties.push( {[friendName] : party}) //bool is the signal to save the partyName for future use

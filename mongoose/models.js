@@ -26,10 +26,13 @@ var userSchema = new Schema({
 
     friends: [friendSchema],
 
+    firstTime:{ type: Number, default: 1},
+
     pendingRequests:{
       type:[String],
       default: []//value is pushed to the array when someone sends us request
     },
+
     changed:{
       type: [Number],
       default: []
