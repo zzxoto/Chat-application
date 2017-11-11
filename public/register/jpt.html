@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+        #errDisplay{
+            width: 300px;
+            height: 100px;
+            border: 5px solid red;
+            color:red;
+            font-size: 20px;
+            display: none;
+        }
+        div{
+          text-align: center;
+          width: 30%;
+          max-width: 400px;
+          min-width: 200px;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 100px;
+          padding: 20px;
+          border: 10px;
+          border-radius: 30px;
+          background-color: #f2f2f2;
+        }
+        #inputList{
+          list-style-type: none;
+          padding: 2px;
+        }
+        #inputList> li{margin-top: 30px; }
+
+        .input{
+            width: 100%;
+            padding: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        input[type=submit]{
+          padding: 10px 20px;
+          font-size: 16px;
+
+        }
+    </style>
+  </head>
+  <body>
+
+
+      <div>
+          <h1>Register</h1>
+
+            <form>
+                <ul id="inputList">
+                  <li><input type="text" name="username" value="" placeholder="Username" class="input"></li>
+                  <li><input type="password" name="password" value="" placeholder="Password" class ="input"></li>
+                  <li><input type="submit" name="" value="Submit"></li>
+                  <li>Make sure username is atleast 5 characters<br>Make sure password is atleast 6 characters</li>
+                  <li id="errDisplay"></li>
+                </ul>
+            </form>
+
+      </div>
+
+      <ul>
+
+      </ul>
+
+
+    <script type="text/javascript" src="index.js">
+    </script>
+
+  </body>
+
+
+</html>
