@@ -57,7 +57,6 @@ friendUlTag.addEventListener('click' , (x)=> {
             var target_name = x.target.firstChild.innerHTML;          //name of the friend in that ul tag (inside span tag)
             var index = 0;
 
-            console.log(chatBoxSpawner_children);
             for(var i =1 ;  i < chatBoxSpawner_children.length ; i++){
               if (target_name == chatBoxSpawner_children[i].getAttribute('id').substr(13) ){ //e.g. chatContainerfoo .. only taking foo
                     index = i;
@@ -117,7 +116,7 @@ function chatBoxFactory(friendName){
       form.appendChild(input);
       arr[4].appendChild(form);
       chatBoxSpawner.appendChild(arr[0]);
-
+      console.log(chatBoxSpawner);
       setTimeout( ()=> fetchChatHistory(friendName) , 0 );
 
 }
@@ -189,6 +188,7 @@ function concurrentChatToView(message , to ){//optional callback param
       the_other_person = to;        //this user sent it
     }
     appendChatToView(message , the_other_person);
+    console.log(the_other_person);
     var chatBodyContainer = document.getElementById('chatBodyContainer' + the_other_person);
     chatBodyContainer.scrollTop = chatBodyContainer.scrollHeight - chatBodyContainer.clientHeight;
 }

@@ -13,6 +13,8 @@ router.use(express.static(path.join(__dirname , '..' , 'public','register')))//m
 router.post('/' , function(req , res){
     var username = req.body.username.trim();
     var validEntry = true;
+    console.log(req.body.password);
+    console.log(req.body.password);
 
     if (username <= 5 || req.body.username.length >= 15){
           validEntry = false;
@@ -28,8 +30,9 @@ router.post('/' , function(req , res){
 
           if (validEntry){
                 var user = new User({ username: username, password: req.body.password , friends:[]})
+                console.log(user);
                 user.save( (err)=> {
-                  if (err){res.send({err:88}); return;}
+                  if (err){res.send({err:88}); return; console.log(err)}
 
                   firstTimeUser(user, (err)=>{
                     if (err){

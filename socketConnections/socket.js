@@ -78,7 +78,7 @@ let ioEventHandling =  (io)=>{
                         io.in(partyName).emit('message' , msg , friendName ) //have to also pass friendName becaue a user is connected to many channels and both the parties should know the name of the person at the other end of communicatoin
 
                         var room = io.sockets.adapter.rooms[partyName];
-                        console.log(room.length ,'room length' , socket.name)
+                        
 
                         if(room.length < 2){
                             query.unseenMessagesCounter(socket.name , friendName)

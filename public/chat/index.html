@@ -117,6 +117,39 @@
 
         }
 
+
+
+        /**LOGIN FORM CSS STARTS**/
+        #loginContainer{
+          text-align: center;
+          width: 30%;
+          max-width: 400px;
+          min-width: 200px;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 100px;
+          padding: 20px;
+          border: 10px;
+          border-radius: 30px;
+          background-color: #f2f2f2;
+        }
+
+        #loginForm> ul > li{margin-top: 10px; }
+
+        .input{/**login form inputs*/
+            width: 100%;
+            padding: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+             box-sizing: border-box;
+        }
+
+        #loginForm > ul > li> input[type=submit]{
+          padding: 10px 20px;
+          font-size: 16px;
+        }
+        /**LOGIN FORM CSS Ends**/
+
         .accept{
             top: 50%;
             left: 0;
@@ -330,15 +363,16 @@
 
   <div id="main">
         <div id="loginContainer">
-            <h1>Login</h1>
+          <h1>Login</h1>
+
             <form id="loginForm">
-                  <label for="loginUsername">Username:</label>
-                  <input type="text" id="loginUsername">
-                  <label for="loginPassword">Password:</label>
-                  <input type="password" id="loginPassword">
-                  <input type="submit" name="" value="submit" id="loginSubmit">
+                <ul style = "list-style-type: none; padding: 2px;">
+                  <li><input type="text" name="username" value="" placeholder="Username" class="input" id="lu"></li>
+                  <li><input type="password" name="password" value="" placeholder="Password" class ="input" id="lp"></li>
+                  <li><input type="submit" name="" value="Submit"></li>
+                  <li id="errDisplay" style="color:red; font-size: 20px;"></li>
+                </ul>
             </form>
-            <p id ="loginErr" style="color: red; border:2px solid red;"></p>
         </div>
 
         <div id="searchAndChatContainer">

@@ -2,8 +2,8 @@ var user ;
 var socket = io.connect();
 
 var loginForm = document.getElementById('loginForm');//TODO remove listener
-var loginUsername = document.getElementById('loginUsername');
-var loginPassword = document.getElementById('loginPassword')
+var loginUsername = document.getElementById('lu');
+var loginPassword = document.getElementById('lp')
 
 var loginContainer = document.getElementById('loginContainer');
 var searchAndChatContainer = document.getElementById('searchAndChatContainer');
@@ -166,12 +166,12 @@ function unseenMessagesNotifier(friend_friendList , numberContainer){
           alert("Not sync with server .. Reloading page");
           location.reload();
       }
-
       if (from){
             if (from == "login"){
-                var loginErr = document.getElementById("loginErr");
+                var loginErr = document.getElementById("errDisplay");
                 if (err == 200){
                     loginErr.innerHTML = ('Password dont match');
+                    console.log(loginErr)
                 }
                 if(err == 100){
                     loginErr.innerHTML = ('User dont exist');

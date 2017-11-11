@@ -20,6 +20,7 @@ mongoose.connect('mongodb://jasmine:jasmine@ds227565.mlab.com:27565/abhaya_first
       else{
         console.log('coonected to the mongodb database');
       }
+      
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
