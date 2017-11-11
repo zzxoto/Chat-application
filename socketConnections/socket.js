@@ -51,6 +51,10 @@ let ioEventHandling =  (io)=>{
 ///////////////////////////////////////////////////////////////////////////////////
 
         socket.on('message' , (friendName , message , callback)=>{
+/**message is transmitted by a user then redistrubuted to everyone in the party.
+  By everyone I mean sender and reciver since it is one to one chat Room.
+  If the receiver is not in the party the message reciver recieves unseen Messagees**/
+
              if (!socket.name){ callback(serverRestartErr); return;}
 
               var partyName = '';
@@ -78,7 +82,7 @@ let ioEventHandling =  (io)=>{
                         io.in(partyName).emit('message' , msg , friendName ) //have to also pass friendName becaue a user is connected to many channels and both the parties should know the name of the person at the other end of communicatoin
 
                         var room = io.sockets.adapter.rooms[partyName];
-                        
+
 
                         if(room.length < 2){
                             query.unseenMessagesCounter(socket.name , friendName)
@@ -118,7 +122,6 @@ let ioEventHandling =  (io)=>{
 
                 var partyName = '';
                 for (var each  of socket.parties){
-
                     if(Object.keys(each)[0] == friendName){
                         partyName = each[friendName]
                         break;

@@ -256,7 +256,6 @@ var acceptRejectFunction = function(acceptor , friendName , acceptor_id , bool ,
 var fetchChatHistoryFunction = function(partyName , user_name , user_id , friendName , callback){//TODO ChatParty Create !!!!
 
       var __historyFetch = function(partyName , callback){
-          console.log(partyName)
 
             Chat.findOne({partyName: partyName} , function(err , party){
 

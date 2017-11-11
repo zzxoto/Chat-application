@@ -28,7 +28,8 @@ chatBoxSpawner.addEventListener('click' , (x)=> {
 
     if(x.target.className == "chatHeaderClose"){
 
-      var friendName  = x.target.parentNode.innerHTML;//name of friend is inscribed directly in div
+      var friendName  = x.target.parentNode.childNodes[0].innerHTML;//TODO fallible to future if childNodes change
+
       var chatContainer = x.target.parentNode.parentNode;
 
       chatContainer.parentNode.removeChild(chatContainer);
@@ -44,6 +45,7 @@ chatBoxSpawner.addEventListener('click' , (x)=> {
 
 
 socket.on('message' , function(message , to ){
+
       concurrentChatToView(message , to);
 })
 
@@ -93,11 +95,13 @@ function chatBoxFactory(friendName){
       arr[0].appendChild(arr[4]);
       arr[2].appendChild(arr[3]);
 
-      arr[1].innerHTML = friendName;
+      var span = document.createElement("span");//friendName at top of chatHeader
+      span.innerHTML = friendName;
+      arr[1].appendChild(span);
 
       var span = document.createElement("span");
       span.innerHTML = "&#10006;";
-      span.className = "chatHeaderClose";//close button for closing chatBox
+      span.className = "chatHeaderClose";//close button at top right of chatHeader
       arr[1].appendChild(span);
 
       var form = document.createElement('form');
