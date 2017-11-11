@@ -30,11 +30,12 @@ form.addEventListener("submit" , function(x){// submit button
 
 function register_response(){
 
-    console.log("asdasd")
+
     if (this.readyState == 4 && this.status == 200) {
-      console.log(this.response)
+
       var response = JSON.parse(this.response);
       var err = response.err;
+
       if (err){
             var errMessage = "";
 
@@ -48,6 +49,7 @@ function register_response(){
             errDisplay.innerHTML = errMessage;
             errDisplay.style.display = "block";
       }
+
       else{
         // window.location.href = "https://abhaya-chat-as-you-like.herokuapp.com/chat";
         window.location.href = "http://localhost:8080/chat"

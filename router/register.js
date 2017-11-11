@@ -29,7 +29,7 @@ router.post('/' , function(req , res){
           if (validEntry){
                 var user = new User({ username: username, password: req.body.password , friends:[]})
                 user.save( (err)=> {
-                  if (err){res.send(err); return;}
+                  if (err){res.send({err:88}); return;}
 
                   firstTimeUser(user, (err)=>{
                     if (err){
