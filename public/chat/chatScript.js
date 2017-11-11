@@ -22,15 +22,18 @@ chatBoxSpawner.addEventListener('submit' , (x)=>{//err checked
     }
 })
 
-chatBoxSpawner.addEventListener('click' , (x)=> {       //removing chatBox on clicking its header
 
-    if(x.target.className == "chatHeader"){
-        var friendName  = x.target.innerHTML
+chatBoxSpawner.addEventListener('click' , (x)=> {
+  //removing chatBox on clicking its header
 
-      var chatContainer = x.target.parentNode;
+    if(x.target.className == "chatHeaderClose"){
+
+      var friendName  = x.target.parentNode.innerHTML;//name of friend is inscribed directly in div
+      var chatContainer = x.target.parentNode.parentNode;
+
       chatContainer.parentNode.removeChild(chatContainer);
 
-      socket.emit('leaveParty' , friendName , callback(err)={
+      socket.emit('leaveParty' , friendName , (err)=>{
         if(err){ errorHandler(err) }
       })
 
@@ -54,6 +57,7 @@ friendUlTag.addEventListener('click' , (x)=> {
             var target_name = x.target.firstChild.innerHTML;          //name of the friend in that ul tag (inside span tag)
             var index = 0;
 
+            console.log(chatBoxSpawner_children);
             for(var i =1 ;  i < chatBoxSpawner_children.length ; i++){
               if (target_name == chatBoxSpawner_children[i].getAttribute('id').substr(13) ){ //e.g. chatContainerfoo .. only taking foo
                     index = i;
@@ -92,6 +96,11 @@ function chatBoxFactory(friendName){
 
       arr[1].innerHTML = friendName;
 
+      var span = document.createElement("span");
+      span.innerHTML = "&#10006;";
+      span.className = "chatHeaderClose";//close button for closing chatBox
+      arr[1].appendChild(span);
+
       var form = document.createElement('form');
       var input = document.createElement('input');
 
@@ -118,12 +127,13 @@ function chatBoxFactory(friendName){
 function fetchChatHistory(friendName){
 
 
-  socket.emit('requestChatHistory' , friendName , function(response , err){
+  socket.emit('requestChatHistory' , friendName , function(err, response){
 
     if (err){
       errorHandler(err , "chatHistory");
       return;
     }
+
       var chatBodyContainer = document.getElementById('chatBodyContainer' + friendName);
 
         for(var each of response){
@@ -137,7 +147,7 @@ function fetchChatHistory(friendName){
 
 
 
-function appendChatToView(msg , friendName ){//callback is optional
+function appendChatToView(msg , friendName ){
 
     var chatBody = document.getElementById('chatBody' + friendName)
 

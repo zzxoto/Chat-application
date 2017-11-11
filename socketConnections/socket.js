@@ -11,7 +11,6 @@ let ioEventHandling =  (io)=>{
             if (x.err){     //if err == 100-> user dont exist .. if err -- 200-> password doesnot match
               callback({err: x.err})
             }
-
                 else{
                    socket._id = x._id//this is database id
                    socket.name = x.username
@@ -39,12 +38,12 @@ let ioEventHandling =  (io)=>{
                   }
               }
               query.fetchChatHistory(partyName , socket.name, socket._id , friendName , (history , party , bool , err)=>{
-                  if (err){ callback(null , err); return; }
+                  if (err){ callback(err , null); return; }
                   socket.join(party)
                   if(bool){
                     socket.parties.push( {[friendName] : party}) //bool is the signal to save the partyName for future use
                   }
-                    callback(history , null) //array of strings or empty array
+                    callback(null , history) //array of strings or empty array
 
               })
 

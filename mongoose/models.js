@@ -26,7 +26,7 @@ var userSchema = new Schema({
 
     friends: [friendSchema],
 
-    firstTime:{ type: Number, default: 1},
+    firstTime:{ type: Boolean, default: true},
 
     pendingRequests:{
       type:[String],

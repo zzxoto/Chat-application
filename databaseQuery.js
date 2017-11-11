@@ -11,17 +11,17 @@ var verifyFunction = function(client , callback){
               callback({err: 100})
         }
         else{
-              if (user.password === client.password){
-
-                    if (user.firstTime == 1){ user.firstTime =2 }
-
-                    if (user.firstTime == 2){ user.firstTime = 3}
-                        user.changed = []; //we are sending everything at start so no need to trigger unnecessary future change
-                        user.save( (err)=> { callback(user); });
+              if (user.password === client.password){//true
+                    user.changed = []; //we are sending everything at start so no need to trigger unnecessary future change
+                    callback(user);
+                    if (user.firstTime){
+                      user.firstTime = false;
+                      user.save();
                     }
+                  }
                   else{
-                      callback({err: 200})
-                    }
+                    callback({err: 200})
+                  }
             }
         })
 

@@ -9,6 +9,7 @@ var loginContainer = document.getElementById('loginContainer');
 var searchAndChatContainer = document.getElementById('searchAndChatContainer');
 
 var  friendUlTag   = document.getElementById("friendsList").childNodes[1];
+var firstTimeMessageClose = document.getElementById("firstTimeMessageClose");
 var friendUlTagArray ;
 
 loginForm.addEventListener('submit' , (x)=>{ //err Checked
@@ -24,12 +25,16 @@ loginForm.addEventListener('submit' , (x)=>{ //err Checked
             errorHandler(response.err , 'login');
             return;
         }
-
         user = response;
+
+        if (user.firstTime){
+           document.getElementById("firstTimeUserMessage").style.display = "block"
+         }
+
         loginContainer.style.display = "none";
         searchAndChatContainer.style.display = "flex";
         document.getElementById('usernameGoesHere').innerHTML = user.username
-        setTimeout( ()=> {console.log('recursiveQuery called');recursiveQuery(); dynamicNotification(user.pendingRequests , true); friendListAppender(user.friends);} , 0)//after user logs in start querying database
+        setTimeout( ()=> {recursiveQuery(); dynamicNotification(user.pendingRequests , true); friendListAppender(user.friends);} , 0)//after user logs in start querying database
 
     })
 
@@ -39,7 +44,6 @@ var  recursiveQuery = function(){//error checked
 
       var routineQuery = function(){//error checked
 
-        console.log('routine')
           socket.emit('routine' , (response)=>{//error checked
               if (response.err){
                   errorHandler(response.err , 'routine');
@@ -196,3 +200,8 @@ function unseenMessagesNotifier(friend_friendList , numberContainer){
       }
 
     }
+
+
+firstTimeMessageClose.addEventListener("click" , (x)=>{
+    x.target.parentNode.style.display = "none";
+})

@@ -5,8 +5,6 @@
     <meta charset="utf-8">
     <title></title>
 
-  </head>
-
   <style media="screen">
 
     html, body{
@@ -224,8 +222,16 @@
       }
 
       .chatHeader{
-        flex:1;
+        flex: 1;
         border-bottom: 1px solid black;
+        background-color: #def7e6;
+        position: relative;
+      }
+      .chatHeader > span{/* chatHeader close button*/
+        position: absolute;
+        color: red;
+        right: 3px;
+        cursor: pointer;
       }
 
 
@@ -290,7 +296,36 @@
         background-color: #F1F0F0;
       }
 
+      #firstTimeUserMessage{
+
+        display: none;
+        padding:5px;
+        border:3px;
+        border-radius: 5px;
+        width:50%;
+        max-width: 400px;
+        min-width: 120px;
+        word-break: word-wrap;
+        position: relative;
+        overflow: hidden;
+        background-color: #5F5F5F;
+        color: white;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 20px;
+      }
+
+      #firstTimeUserMessage > span{
+          color: red;
+          position: absolute;
+          top:0px;
+          right: 3px;
+          cursor: pointer;
+      }
+
   </style>
+
+  </head>
   <body>
 
   <div id="main">
@@ -331,13 +366,17 @@
                             <h1 id="usernameGoesHere"></h1>
                             <div id="chatBoxSpawner">
 
-
+                            </div> <!--this is absolute element holds chat box, shown at bottom right of the screen-->
+                            <div id="firstTimeUserMessage">
+                              <h3> Welcome! </h3>
+                              <p>Welcome to this humble chat application. I am Abhaya I will be your friend through out the development phase of this site. Please shoot me a message if you have any concerns. I shall reply it within 24 hrs. MeanWhile invite your friends to this awesome private chat application.</p>
+                              <span id="firstTimeMessageClose">&#10006;</span>
                             </div>
 
                     </div>
-                    <div id ="friendsList">
+                    <div id="friendsList">
                         <ul>
-                            <!--list of friends goes here -->
+
                         </ul>
                     </div>
                 </div>
